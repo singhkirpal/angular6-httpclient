@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { RestService } from '../rest.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-add',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductAddComponent implements OnInit {
 
-  constructor() { }
+  @Input() productData = { prod_name:'', prod_desc: '', prod_price: 0 };
+
+  constructor(public rest:RestService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+  }
+
+  addProduct() {
+    this.rest.addProduct(this.productData).subscribe((result) => {
+      this.router.navigate(['/product-details/'+result._id]);
+    }, (err) => {
+      console.log(err);
+    });
   }
 
 }
